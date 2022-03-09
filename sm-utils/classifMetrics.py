@@ -4,6 +4,7 @@ import seaborn as sns
 
 from typing import Sequence
 
+
 def plot_confusion_matrix(
     y_true: Sequence, 
     y_pred: Sequence, 
@@ -57,6 +58,7 @@ def plot_confusion_matrix(
         for i in range(len(labels))
     ]
     
+    # Plot Matrix
     fig, axes = plt.subplots(1,1, figsize=(len(labels) + 5, len(labels) + 2))
     sns.heatmap(cn, annot=annot_matrix, fmt='', cmap='viridis', ax=axes)
     axes.set_title('Confusion Matrix (with count, confidence)')
