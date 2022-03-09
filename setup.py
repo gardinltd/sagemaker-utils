@@ -8,7 +8,7 @@ except:
 
 setuptools.setup(
     name="smUtils",
-    version="0.0.2",
+    version="0.0.3",
     author="Sathwik",
     author_email="s.mandava@gardin.co.uk",
     description="Common useful functions for projects using Sagemaker",
@@ -21,7 +21,7 @@ setuptools.setup(
         "License :: GNU General Public License v3.0",
         "Operating System :: OS Independent",
     ],
-    package_dir={"smUtils": "sm-utils"},
-    packages=setuptools.find_packages(where="."),
+    packages=['smUtils'],
+    package_dir = {'smUtils': 'sm-utils'},
     python_requires=">=3.6",
 )
