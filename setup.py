@@ -21,7 +21,7 @@ setuptools.setup(
         "License :: GNU General Public License v3.0",
         "Operating System :: OS Independent",
     ],
-    package_dir={"": "sm-utils"},
-    packages=setuptools.find_packages(where="sm-utils"),
+    package_dir={"smUtils": "sm-utils"},
+    packages=setuptools.find_packages(where=""),
     python_requires=">=3.6",
 )
