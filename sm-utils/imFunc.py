@@ -4,7 +4,7 @@ import numpy as np
 import io
 from collections.abc import Sequence
 
-from palette import palette
+from .palette import palette
 
 
 # Image type conversions
