@@ -2,7 +2,7 @@ from PIL import Image, ImageEnhance
 import numpy as np
 
 import io
-from collections.abc import Sequence
+from typing import Sequence
 
 from .palette import palette
 
