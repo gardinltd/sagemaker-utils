@@ -1,10 +1,12 @@
 import setuptools
 
+
 try:
     with open("README.md", "r", encoding="utf-8") as fh:
         long_description = fh.read()
 except:
     long_description = "To be added"
+
 
 setuptools.setup(
     name="smUtils",

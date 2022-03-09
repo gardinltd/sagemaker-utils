@@ -2,9 +2,6 @@ from PIL import Image, ImageEnhance
 import numpy as np
 
 import io
-from typing import Sequence
-
-from .palette import palette
 
 
 # Image type conversions
@@ -36,27 +33,6 @@ def bytes_to_image(bytes_obj: bytes) -> Image:
     bytes_obj : Bytes Object,
     """
     return Image.open(io.BytesIO(bytes_obj))
-
-
-def mask_array_to_image(
-    arr: np.array, palette: Sequence[int] = palette
-) -> Image:
-    """Converts a Numpy segment mask array into PIL Image with
-    palette for segments.
-
-    Parameters
-    ----------
-    arr : Numpy Array,
-        2D Mask array with each unique integer belonging to an instance.
-    
-    palette : Sequence[int], default pallete with 55 colors
-        Palette to be set for the PNG Image object.
-    """
-    num_segments = len(np.unique(arr))
-
-    image = Image.fromarray(arr, mode='P')
-    image.putpalette(palette[:num_segments*3])
-    return image
 
 
 # Image Augmentation Functions
