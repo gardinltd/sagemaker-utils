@@ -7,7 +7,7 @@ except:
     long_description = "To be added"
 
 setuptools.setup(
-    name="sm-utils",
+    name="smUtils",
     version="0.0.1",
     author="Sathwik",
     author_email="s.mandava@gardin.co.uk",
