@@ -115,12 +115,16 @@ def random_augment(image: Image, segment: Image = None, prob: int = 20):
         image = vary_bright(image)       
     if np.random.randint(1, 100) <= prob*1.2:
         image = vary_contrast(image)
-    if np.random.randint(1, 100) <= prob:
-        image, segment = vary_angle(image, segment)
-    if np.random.randint(1, 100) <= prob*1.5:
-        image, segment = vary_flip(image, segment)
 
     if segment:
+        if np.random.randint(1, 100) <= prob:
+            image, segment = vary_angle(image, segment)
+        if np.random.randint(1, 100) <= prob*1.5:
+            image, segment = vary_flip(image, segment)
         return image, segment
     else:
+        if np.random.randint(1, 100) <= prob:
+            image = vary_angle(image)
+        if np.random.randint(1, 100) <= prob*1.5:
+            image = vary_flip(image)
         return image
