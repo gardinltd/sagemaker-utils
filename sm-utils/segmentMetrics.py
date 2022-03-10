@@ -18,8 +18,7 @@ def iou_coef(y_true: np.array, y_pred: np.array):
 def dice_coef(y_true: np.array, y_pred: np.array):
     """Calculate Dice coefficient"""
     intersection = np.logical_and(y_true, y_pred)
-    union = np.logical_or(y_true, y_pred)
     if y_true.sum()+y_pred.sum() == 0:
-        return 0
+        return 1
     dice = (2*intersection.sum())/(y_true.sum()+y_pred.sum())
     return dice

@@ -38,7 +38,7 @@ def bytes_to_image(bytes_obj: bytes) -> Image:
 # Image Augmentation Functions
 def vary_sharp(image):
     """Vary image sharpness randomly"""
-    factor = np.random.randint(50, 500) * 0.01
+    factor = np.random.randint(100, 500) * 0.01
     return ImageEnhance.Sharpness(image).enhance(factor)
 
 def vary_bright(image):
