@@ -34,7 +34,7 @@ def overlay_mask(
     """Overlays segment mask on the image"""
     segment_alpha = segment.convert('RGBA')
     segment_alpha.putalpha(alpha)
-    overlay = image.copy()
+    overlay = image.copy().convert('RGB')
     overlay.paste(segment, (0,0), segment_alpha)
     return overlay
 
@@ -54,6 +54,6 @@ def draw_bounding_box(
             outline=colors[i], width=5
         )
         
-    overlay = image.copy()
+    overlay = image.copy().convert('RGB')
     overlay.paste(box_im, (0,0), box_im)
     return overlay
