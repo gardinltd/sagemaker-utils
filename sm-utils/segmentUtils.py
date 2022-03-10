@@ -43,19 +43,20 @@ def overlay_mask(
 def draw_bounding_box(
     image: Image, 
     coordinates: Sequence[Sequence], 
-    alpha: int = 127,
+    alpha: int = 50,
     colors: Sequence[tuple] = colors[1:]
 ) -> Image:
     """Draw bounding boxes on top of images"""
-    box_im = Image.new("RGBA", image.size, (0, 0, 0, 0))
-    draw = ImageDraw.Draw(box_im)
+    overlay = image.copy().convert('RGB')
+
     for i, (x1, y1, x2, y2) in enumerate(coordinates):
+        box_im = Image.new("RGBA", image.size, (0, 0, 0, 0))
+        draw = ImageDraw.Draw(box_im)
         draw.rectangle(
             [x1, y1, x2, y2], 
             fill=tuple(list(colors[i])+[alpha]), 
-            outline=colors[i], width=5
+            outline=colors[i], width=2
         )
+        overlay.paste(box_im, (0,0), box_im)
         
-    overlay = image.copy().convert('RGB')
-    overlay.paste(box_im, (0,0), box_im)
     return overlay
