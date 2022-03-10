@@ -33,7 +33,8 @@ def overlay_mask(
 ) -> Image:
     """Overlays segment mask on the image"""
     segment_alpha = segment.convert('RGBA')
-    segment_alpha.putalpha(alpha)
+    segment_alpha_mask = Image.fromarray((np.array(segment)!=0).astype('uint8') * alpha).convert('L')
+    segment_alpha.putalpha(segment_alpha_mask)
     overlay = image.copy().convert('RGB')
     overlay.paste(segment, (0,0), segment_alpha)
     return overlay
