@@ -1,5 +1,7 @@
 import io
+import hashlib
 from typing import List
+from xml.dom import ValidationErr
 
 def upload_file_to_s3(
     s3_client,
@@ -339,6 +341,7 @@ def perminently_delete_folder_in_s3(
     s3_uri: str = None,
     bucket_name: str = None, 
     prefix: str = None,
+    password: str = None
 ) -> bytes:
     """Deletes a folder in s3 perminently.
 
@@ -346,6 +349,12 @@ def perminently_delete_folder_in_s3(
       - s3_uri
       - bucket_name and prefix
     """
+    if password:
+        if not hashlib.sha224(password.encode('utf-8')).hexdigest() == 'a694b788f26e4613fbdac0fd67c141ace918efa41e9a4ff94116ef43':
+            raise ValidationErr('Wrong Password!')
+    else:
+        raise NameError('Please provide password for this sensitive operation')
+
     if s3_uri or (bucket_name and prefix):
         if s3_uri:
             bucket_name = s3_uri.split('/')[2]
