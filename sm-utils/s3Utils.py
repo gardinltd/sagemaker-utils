@@ -117,7 +117,8 @@ def copy_file_in_s3(
         """)
 
     copy_source = {'Bucket': org_bucket, 'Key': org_key}
-    s3_client.copy_object(Bucket=dest_bucket, Key=dest_key, CopySource=copy_source)
+    resp = s3_client.copy_object(Bucket=dest_bucket, Key=dest_key, CopySource=copy_source)
+    return resp
 
 
 def delete_file_in_s3(
@@ -148,7 +149,8 @@ def delete_file_in_s3(
           - bucket_name and prefix and filename
         """)
     
-    s3_client.delete_object(Bucket=bucket_name, Key=key)
+    resp = s3_client.delete_object(Bucket=bucket_name, Key=key)
+    return resp
 
 
 def move_file_in_s3(
@@ -175,7 +177,7 @@ def move_file_in_s3(
       - dest_bucket and dest_key
       - dest_bucket and dest_prefix and dest_filename
     """
-    copy_file_in_s3(
+    copy_resp = copy_file_in_s3(
         s3_client,
         s3_uri = org_s3_uri,
         bucket_name = org_bucket, 
@@ -189,7 +191,7 @@ def move_file_in_s3(
         dest_filename = dest_filename
     )
 
-    delete_file_in_s3(
+    delete_resp = delete_file_in_s3(
         s3_client,
         org_s3_uri = org_s3_uri,
         org_bucket = org_bucket, 
@@ -197,6 +199,8 @@ def move_file_in_s3(
         org_prefix = org_prefix,
         filename = org_filename,
     )
+
+    return copy_resp, delete_resp
 
 
 def list_s3_objects(
@@ -234,3 +238,144 @@ def list_s3_objects(
             break        
         ContinuationToken = resp['NextContinuationToken']
     return response_list
+
+
+def list_s3_object_versions(
+    s3_client,
+    s3_uri: str = None,
+    bucket_name: str = None, 
+    prefix: str = None,
+) -> List:
+    """Lists files with all their versions in s3.
+
+    Must provide at least one of the following combinations:
+      - s3_uri
+      - bucket_name and prefix
+    """
+    if s3_uri or (bucket_name and prefix):
+        if s3_uri:
+            bucket_name = s3_uri.split('/')[2]
+            prefix = '/'.join(s3_uri.split('/')[3:])
+    else:
+        raise NameError("""Please provide at least one of the following combinations:
+          - s3_uri
+          - bucket_name and prefix
+        """)
+        
+    response_list = []
+    KeyMarker, VersionIdMarker = None, None
+    
+    while True:
+        if KeyMarker and VersionIdMarker:
+            resp = s3_client.list_object_versions(Bucket=bucket_name, Prefix=prefix, KeyMarker=KeyMarker, VersionIdMarker=VersionIdMarker)
+        elif KeyMarker:
+            resp = s3_client.list_object_versions(Bucket=bucket_name, Prefix=prefix, KeyMarker=KeyMarker)
+        elif VersionIdMarker:
+            resp = s3_client.list_object_versions(Bucket=bucket_name, Prefix=prefix, VersionIdMarker=VersionIdMarker)
+        else:
+            resp = s3_client.list_object_versions(Bucket=bucket_name, Prefix=prefix)
+        
+        if 'Versions' in resp:
+            response_list.extend(resp['Versions'])
+        if 'DeleteMarkers' in resp:
+            response_list.extend(resp['DeleteMarkers'])
+        if not resp['IsTruncated']:
+            break
+        KeyMarker = resp['NextKeyMarker']
+        VersionIdMarker = resp['NextVersionIdMarker']
+    
+    return response_list
+
+
+def delete_folder_in_s3(
+    s3_client,
+    s3_uri: str = None,
+    bucket_name: str = None, 
+    prefix: str = None,
+) -> bytes:
+    """Deletes a folder in s3.
+
+    Must provide at least one of the following combinations:
+      - s3_uri
+      - bucket_name and prefix
+    """
+    if s3_uri or (bucket_name and prefix):
+        if s3_uri:
+            bucket_name = s3_uri.split('/')[2]
+            prefix = '/'.join(s3_uri.split('/')[3:])
+    else:
+        raise NameError("""Please provide at least one of the following combinations:
+          - s3_uri
+          - bucket_name and prefix
+        """)
+        
+    listed_files = list_s3_objects(
+        s3_client,
+        s3_uri = s3_uri,
+        bucket_name = bucket_name, 
+        prefix = prefix,
+    )
+    files_to_delete = [{'Key': obj['Key']} for obj in listed_files]
+    
+    success = []
+    errors = []
+    for i in range(0, len(files_to_delete), 1000):
+        resp = s3_client.delete_objects(
+            Bucket=bucket_name,
+            Delete={
+                'Objects': files_to_delete[i:i+1000],
+            }
+        )
+        if 'Deleted' in resp:
+            success.extend(resp['Deleted'])
+        if 'Errors' in resp:
+            errors.extend(resp['Errors'])
+    
+    return success, errors
+
+
+def perminently_delete_folder_in_s3(
+    s3_client,
+    s3_uri: str = None,
+    bucket_name: str = None, 
+    prefix: str = None,
+) -> bytes:
+    """Deletes a folder in s3 perminently.
+
+    Must provide at least one of the following combinations:
+      - s3_uri
+      - bucket_name and prefix
+    """
+    if s3_uri or (bucket_name and prefix):
+        if s3_uri:
+            bucket_name = s3_uri.split('/')[2]
+            prefix = '/'.join(s3_uri.split('/')[3:])
+    else:
+        raise NameError("""Please provide at least one of the following combinations:
+          - s3_uri
+          - bucket_name and prefix
+        """)
+        
+    listed_files = list_s3_object_versions(
+        s3_client,
+        s3_uri = s3_uri,
+        bucket_name = bucket_name, 
+        prefix = prefix,
+    )
+    files_to_delete = [{'Key': obj['Key'], 'VersionId': obj['VersionId']} for obj in listed_files]
+    
+    success = []
+    errors = []
+    for i in range(0, len(files_to_delete), 1000):
+        resp = s3_client.delete_objects(
+            Bucket=bucket_name,
+            Delete={
+                'Objects': files_to_delete[i:i+1000],
+            }
+        )
+        if 'Deleted' in resp:
+            success.extend(resp['Deleted'])
+        if 'Errors' in resp:
+            errors.extend(resp['Errors'])
+    
+    return success, errors
