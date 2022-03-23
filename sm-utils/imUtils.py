@@ -2,6 +2,7 @@ from PIL import Image, ImageEnhance
 import numpy as np
 
 import io
+import base64
 
 
 # Image type conversions
@@ -33,6 +34,26 @@ def bytes_to_image(bytes_obj: bytes) -> Image:
     bytes_obj : Bytes Object,
     """
     return Image.open(io.BytesIO(bytes_obj))
+
+
+def image_bytes_to_string(bytes_obj: bytes) -> str:
+    """Converts a Image bytes object to Image string object
+    
+    Parameters
+    ----------
+    bytes_obj : Bytes Object,
+    """
+    return base64.b64encode(bytes_obj).decode('utf-8')
+
+
+def image_string_to_bytes(str_obj: str) -> bytes:
+    """Converts a Image string object to Image bytes object
+    
+    Parameters
+    ----------
+    str_obj : String Object,
+    """
+    return base64.b64decode(str_obj.encode('utf-8'))
 
 
 # Image Augmentation Functions
