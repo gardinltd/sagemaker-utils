@@ -1,6 +1,6 @@
 import requests
 
-def send_request_to_sm_api(DATA, URL, METHOD, CONTENT_TYPE, ACCEPT_TYPE, API_KEY):
+def send_request_to_sm_api(DATA, URL, CONTENT_TYPE, ACCEPT_TYPE, API_KEY):
     HEADERS = {
         'ContentType': CONTENT_TYPE,
         'Accept': ACCEPT_TYPE,
@@ -9,7 +9,7 @@ def send_request_to_sm_api(DATA, URL, METHOD, CONTENT_TYPE, ACCEPT_TYPE, API_KEY
     }
 
     resp = requests.request(
-        method=METHOD, 
+        method='GET', 
         url=URL, 
         headers=HEADERS, 
         data=DATA
