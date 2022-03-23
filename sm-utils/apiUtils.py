@@ -15,4 +15,4 @@ def send_request_to_sm_endpoint(DATA, URL, METHOD, CONTENT_TYPE, ACCEPT_TYPE, AP
         data=DATA
     )
 
-    return resp.status_code, resp.content
+    return resp
