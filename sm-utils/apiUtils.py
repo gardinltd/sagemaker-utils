@@ -1,6 +1,6 @@
 import requests
 
-def send_request_to_sm_endpoint(DATA, URL, METHOD, CONTENT_TYPE, ACCEPT_TYPE, API_KEY):
+def send_request_to_sm_api(DATA, URL, METHOD, CONTENT_TYPE, ACCEPT_TYPE, API_KEY):
     HEADERS = {
         'ContentType': CONTENT_TYPE,
         'Accept': ACCEPT_TYPE,
