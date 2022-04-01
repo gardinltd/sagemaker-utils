@@ -415,9 +415,11 @@ def download_s3_folder(
           - bucket_name and prefix
         """)
 
-    for obj in list_s3_objects(s3_client, s3_uri, bucket_name, prefix):
+    objects = list_s3_objects(s3_client, s3_uri, bucket_name, prefix)
+    for i, obj in enumerate(objects):
         target = os.path.join(local_dir, os.path.relpath(obj['Key'], prefix))
-
+        print(f'Downloading files {i+1}/{len(objects)}...', end='', flush=True)
+        
         if not os.path.exists(os.path.dirname(target)):
             os.makedirs(os.path.dirname(target), exist_ok=True)
         if obj['Key'][-1] == '/':
