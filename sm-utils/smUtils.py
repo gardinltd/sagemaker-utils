@@ -6,6 +6,7 @@ from typing import Sequence
 
 from .s3Utils import read_file_from_s3, upload_file_to_s3
 
+
 def protobuf_to_numpy_mask(bytes_obj: bytes):
     """Converts record io protobuf response from Segmentation model
     to a numpy segment mask array"""

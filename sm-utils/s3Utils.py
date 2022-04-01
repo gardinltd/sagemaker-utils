@@ -1,7 +1,9 @@
 import io
+import os
 import hashlib
 from typing import List
 from xml.dom import ValidationErr
+
 
 def upload_file_to_s3(
     s3_client,
@@ -388,3 +390,37 @@ def perminently_delete_folder_in_s3(
             errors.extend(resp['Errors'])
     
     return success, errors
+
+
+def download_s3_folder(
+    s3_client, 
+    local_dir,
+    s3_uri: str = None,
+    bucket_name: str = None, 
+    prefix: str = None,
+) -> None:
+    """Downloads s3 folder to local destination.
+
+    Must provide at least one of the following combinations:
+      - s3_uri
+      - bucket_name and prefix
+    """
+    if s3_uri or (bucket_name and prefix):
+        if s3_uri:
+            bucket_name = s3_uri.split('/')[2]
+            prefix = '/'.join(s3_uri.split('/')[3:])
+    else:
+        raise NameError("""Please provide at least one of the following combinations:
+          - s3_uri
+          - bucket_name and prefix
+        """)
+
+    for obj in list_s3_objects(s3_client, s3_uri, bucket_name, prefix):
+        target = os.path.join(local_dir, os.path.relpath(obj['key'], prefix))
+
+        if not os.path.exists(os.path.dirname(target)):
+            os.makedirs(os.path.dirname(target), exist_ok=True)
+        if obj['key'][-1] == '/':
+            continue
+
+        s3_client.download_file(bucket_name, obj['key'], target)
