@@ -45,12 +45,12 @@ def deploy_endpoint(sm_client, endpoint_config_name: str = None, endpoint_name: 
     while creating:
         ep_des_res = sm_client.describe_endpoint(EndpointName=endpoint_name)
         print('.', end='')
-        time.sleep(30)
         if ep_des_res["EndpointStatus"] != "Creating":
             print('!\n')
             print(f'Endpoint Name: {endpoint_name}')
             print(f'Endpoint Status: {ep_des_res["EndpointStatus"]}, Time taken: {int(time.perf_counter() - start_time)} sec')
             creating = False
+        time.sleep(30)
 
 
 def get_manifest_lines(

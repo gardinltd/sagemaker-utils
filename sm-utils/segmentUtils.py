@@ -60,3 +60,24 @@ def draw_bounding_box(
         overlay.paste(box_im, (0,0), box_im)
         
     return overlay
+
+
+def plot_points(
+    image: Image,
+    points: Sequence[Sequence],
+    radius: int = 5,
+    alpha: int = 255,
+    color: tuple = (255, 0, 0)
+) -> Image:
+    """Plot points on top of image"""
+    overlay = image.copy().convert('RGB')
+
+    for (x, y) in points:
+        point_im = Image.new("RGBA", image.size, (0, 0, 0, 0))
+        draw = ImageDraw.Draw(point_im)
+        draw.ellipse((x-radius, y-radius, x+radius, y+radius), fill=tuple(list(color) + [alpha]))
+
+        overlay.paste(point_im, (0,0), point_im)
+
+    return overlay
+
