@@ -128,9 +128,13 @@ def random_augment(image: Image, segment: Image = None, prob: int = 20):
         return image
 
 
-def image_to_matplot_image(image, axis=False, axis_color='white', title=None, xlabel=None, ylabel=None, xlim=None, ylim=None):
+def image_to_matplot_image(image, axis=True, axis_color='white', title=None, xlabel=None, ylabel=None, xlim=None, ylim=None, cmap=None):
     fig, axes = plt.subplots(nrows=1, ncols=1)
-    axes.imshow(image)
+
+    if cmap:
+        axes.imshow(image, cmap=cmap)
+    else:
+        axes.imshow(image)
 
     if xlim is not None:
         axes.set_xlim(xlim[0], xlim[1])
