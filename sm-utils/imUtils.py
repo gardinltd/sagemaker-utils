@@ -1,5 +1,6 @@
 from PIL import Image, ImageEnhance
 import numpy as np
+import matplotlib.pyplot as plt
 
 import io
 import base64
@@ -107,9 +108,9 @@ def random_augment(image: Image, segment: Image = None, prob: int = 20):
         Probability of applying a transformation
     """
     if np.random.randint(1, 100) <= prob:
-        image = vary_sharp(image)       
+        image = vary_sharp(image)
     if np.random.randint(1, 100) <= prob:
-        image = vary_bright(image)       
+        image = vary_bright(image)
     if np.random.randint(1, 100) <= prob*1.2:
         image = vary_contrast(image)
 
@@ -125,3 +126,39 @@ def random_augment(image: Image, segment: Image = None, prob: int = 20):
         if np.random.randint(1, 100) <= prob*1.5:
             image = vary_flip(image)
         return image
+
+
+def image_to_matplot_image(image, axis=False, axis_color='white', title=None, xlabel=None, ylabel=None, xlim=None, ylim=None):
+    fig, axes = plt.subplots(nrows=1, ncols=1)
+    axes.imshow(image)
+
+    if xlim is not None:
+        axes.set_xlim(xlim[0], xlim[1])
+    if ylim is not None:
+        axes.set_ylim(ylim[0], ylim[1])
+
+    if axis:
+        axes.set_yticklabels([])
+        axes.set_xticklabels([])
+        axes.set_yticks([])
+        axes.set_xticks([])
+
+    if title is not None:
+        axes.set_title(title)
+    if xlabel is not None:
+        axes.set_xlabel(xlabel)
+    if ylabel is not None:
+        axes.set_ylabel(ylabel)
+
+    axes.tick_params(axis='x', colors=axis_color)
+    axes.tick_params(axis='y', colors=axis_color)
+    axes.yaxis.label.set_color(axis_color)
+    axes.xaxis.label.set_color(axis_color)
+    axes.title.set_color(axis_color)
+
+    plot_img = io.BytesIO()
+    fig.savefig(plot_img, format='png')
+    plt.close(fig)
+
+    plot_img.seek(0)
+    return Image.open(io.BytesIO(plot_img.read()))
