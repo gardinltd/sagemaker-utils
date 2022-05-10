@@ -137,7 +137,7 @@ def image_to_matplot_image(image, axis=False, axis_color='white', title=None, xl
     if ylim is not None:
         axes.set_ylim(ylim[0], ylim[1])
 
-    if axis:
+    if not axis:
         axes.set_yticklabels([])
         axes.set_xticklabels([])
         axes.set_yticks([])
