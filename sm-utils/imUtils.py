@@ -1,6 +1,5 @@
 from PIL import Image, ImageEnhance
 import numpy as np
-import matplotlib.pyplot as plt
 
 import io
 import base64
@@ -129,6 +128,8 @@ def random_augment(image: Image, segment: Image = None, prob: int = 20):
 
 
 def image_to_matplot_image(image, axis=True, axis_color='white', title=None, xlabel=None, ylabel=None, xlim=None, ylim=None, cmap=None):
+    import matplotlib.pyplot as plt
+    
     fig, axes = plt.subplots(nrows=1, ncols=1)
 
     if cmap:
