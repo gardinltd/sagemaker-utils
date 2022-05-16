@@ -237,7 +237,8 @@ def list_s3_objects(
         else:
             resp = s3_client.list_objects_v2(Bucket=bucket_name, Prefix=prefix)
         
-        response_list.extend(resp['Contents'])
+        if 'Contents' in resp:
+            response_list.extend(resp['Contents'])
         if not resp['IsTruncated']:
             break        
         ContinuationToken = resp['NextContinuationToken']
