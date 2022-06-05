@@ -1,18 +1,13 @@
 import requests
 
-def send_request_to_sm_api(DATA, URL, CONTENT_TYPE, ACCEPT_TYPE, API_KEY):
-    HEADERS = {
-        'ContentType': CONTENT_TYPE,
-        'Accept': ACCEPT_TYPE,
-        'Content-Type': CONTENT_TYPE,
-        'X-API-Key': API_KEY
-    }
+def send_request_to_api(DATA, URL, CONTENT_TYPE=None, ACCEPT_TYPE=None, API_KEY=None):
+    HEADERS = {}
+    if CONTENT_TYPE is not None:
+        HEADERS['Content-Type'] = CONTENT_TYPE
+        HEADERS['ContentType'] = CONTENT_TYPE
+    if ACCEPT_TYPE is not None:
+        HEADERS['Accept'] = ACCEPT_TYPE
+    if API_KEY is not None:
+        HEADERS['X-API-Key'] = API_KEY
 
-    resp = requests.request(
-        method='GET', 
-        url=URL, 
-        headers=HEADERS, 
-        data=DATA
-    )
-
-    return resp
+    return requests.request(method='GET', url=URL, headers=HEADERS, data=DATA)

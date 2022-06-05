@@ -15,7 +15,7 @@ def mask_array_to_image(
     ----------
     arr : Numpy Array,
         2D Mask array with each unique integer belonging to an instance.
-    
+
     palette : Sequence[int], default pallete with 55 colors
         Palette to be set for the PNG Image object.
     """
@@ -27,9 +27,9 @@ def mask_array_to_image(
 
 
 def overlay_mask(
-    image: Image, 
-    segment: Image, 
-    alpha: int = 127 
+    image: Image,
+    segment: Image,
+    alpha: int = 127
 ) -> Image:
     """Overlays segment mask on the image"""
     segment_alpha = segment.convert('RGBA')
@@ -41,8 +41,8 @@ def overlay_mask(
 
 
 def draw_bounding_box(
-    image: Image, 
-    coordinates: Sequence[Sequence], 
+    image: Image,
+    coordinates: Sequence[Sequence],
     alpha: int = 50,
     colors: Sequence[tuple] = colors[1:]
 ) -> Image:
@@ -53,12 +53,12 @@ def draw_bounding_box(
         box_im = Image.new("RGBA", image.size, (0, 0, 0, 0))
         draw = ImageDraw.Draw(box_im)
         draw.rectangle(
-            [x1, y1, x2, y2], 
-            fill=tuple(list(colors[i])+[alpha]), 
+            [x1, y1, x2, y2],
+            fill=tuple(list(colors[i])+[alpha]),
             outline=colors[i], width=2
         )
         overlay.paste(box_im, (0,0), box_im)
-        
+
     return overlay
 
 

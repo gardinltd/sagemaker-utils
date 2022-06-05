@@ -14,21 +14,21 @@ def image_to_bytes(image: Image, format: str = 'PNG') -> bytes:
     image : PIL Image,
 
     format : string, default PNG
-        Will check for the image format in the Image. If not present, 
+        Will check for the image format in the Image. If not present,
         then uses the value in this argument.
     """
-    
+
     if image.format:
         format = image.format
-    
+
     imgByteArr = io.BytesIO()
-    image.save(imgByteArr, format=format)    
+    image.save(imgByteArr, format=format)
     return imgByteArr.getvalue()
 
 
 def bytes_to_image(bytes_obj: bytes) -> Image:
     """Converts a Image bytes object to PIL Image
-    
+
     Parameters
     ----------
     bytes_obj : Bytes Object,
@@ -38,7 +38,7 @@ def bytes_to_image(bytes_obj: bytes) -> Image:
 
 def image_bytes_to_string(bytes_obj: bytes) -> str:
     """Converts a Image bytes object to Image string object
-    
+
     Parameters
     ----------
     bytes_obj : Bytes Object,
@@ -48,7 +48,7 @@ def image_bytes_to_string(bytes_obj: bytes) -> str:
 
 def image_string_to_bytes(str_obj: str) -> bytes:
     """Converts a Image string object to Image bytes object
-    
+
     Parameters
     ----------
     str_obj : String Object,
@@ -64,12 +64,12 @@ def vary_sharp(image):
 
 def vary_bright(image):
     """Vary image brightness randomly"""
-    factor = np.random.randint(75, 125) * 0.01
+    factor = np.random.randint(50, 175) * 0.01
     return ImageEnhance.Brightness(image).enhance(factor)
 
 def vary_contrast(image):
     """Vary image contrast randomly"""
-    factor = np.random.randint(50, 150) * 0.01
+    factor = np.random.randint(50, 175) * 0.01
     return ImageEnhance.Contrast(image).enhance(factor)
 
 def vary_angle(image, segment = None):
@@ -106,11 +106,11 @@ def random_augment(image: Image, segment: Image = None, prob: int = 20):
     prob: int, default 20
         Probability of applying a transformation
     """
-    if np.random.randint(1, 100) <= prob:
+    if np.random.randint(1, 100) <= prob*1.5:
         image = vary_sharp(image)
     if np.random.randint(1, 100) <= prob:
         image = vary_bright(image)
-    if np.random.randint(1, 100) <= prob*1.2:
+    if np.random.randint(1, 100) <= prob*1.5:
         image = vary_contrast(image)
 
     if segment:
@@ -129,7 +129,7 @@ def random_augment(image: Image, segment: Image = None, prob: int = 20):
 
 def image_to_matplot_image(image, axis=True, axis_color='white', title=None, xlabel=None, ylabel=None, xlim=None, ylim=None, cmap=None):
     import matplotlib.pyplot as plt
-    
+
     fig, axes = plt.subplots(nrows=1, ncols=1)
 
     if cmap:
