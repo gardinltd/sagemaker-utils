@@ -59,7 +59,7 @@ def image_string_to_bytes(str_obj: str) -> bytes:
 # Image Augmentation Functions
 def vary_sharp(image):
     """Vary image sharpness randomly"""
-    factor = np.random.randint(50, 500) * 0.01
+    factor = np.random.randint(50, 300) * 0.01
     return ImageEnhance.Sharpness(image).enhance(factor)
 
 def vary_bright(image):
@@ -106,11 +106,11 @@ def random_augment(image: Image, segment: Image = None, prob: int = 20):
     prob: int, default 20
         Probability of applying a transformation
     """
-    if np.random.randint(1, 100) <= prob*1.5:
+    if np.random.randint(1, 100) <= prob*1.3:
         image = vary_sharp(image)
     if np.random.randint(1, 100) <= prob:
         image = vary_bright(image)
-    if np.random.randint(1, 100) <= prob*1.5:
+    if np.random.randint(1, 100) <= prob*1.3:
         image = vary_contrast(image)
 
     if segment:
