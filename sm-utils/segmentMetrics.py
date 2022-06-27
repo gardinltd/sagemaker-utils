@@ -29,4 +29,4 @@ def get_multiclass_dice(y_true: np.array, y_pred: np.array):
     classes = set(np.unique(y_true))
     classes.update(np.unique(y_pred))
     dices = [get_dice_coef((y_true==c).astype('uint8'), (y_pred==c).astype('uint8')) for c in list(classes)]
-    return np.mean(ious)
+    return np.mean(dices)

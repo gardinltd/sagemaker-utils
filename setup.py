@@ -10,7 +10,7 @@ except:
 
 setuptools.setup(
     name="smUtils",
-    version="0.2.1",
+    version="0.2.2",
     author="SathwikM",
     author_email="s.mandava@gardin.co.uk",
     description="Common useful functions for projects using Sagemaker",
